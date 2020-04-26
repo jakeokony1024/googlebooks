@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
-const routes = require("./routes")
+const mongoose = require("mongoose");
+const routes = require("./routes");
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -22,7 +24,7 @@ app.get("*", (req, res) => {
 });
 
 mongoose.connect(
-	process.env.MONGODB_URI || "mongodb://user:password12@ds027483.mlab.com:27483/heroku_5cl1n8ks",
+	process.env.MONGODB_URI || "mongodb://user:tomsucks12@ds049925.mlab.com:49925/heroku_w5pbvt16",
 	{ useNewUrlParser: true }
 );
 
