@@ -4,7 +4,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../Utils/API";
 import SavedResult from "../components/SavedResult";
 
-class SaveBook extends Component {
+class SaveBooks extends Component {
 	state = {
 		savedBooks: []
 	};
@@ -35,4 +35,4 @@ class SaveBook extends Component {
 	}
 }
 
-export default SaveBook;
+export default SaveBooks;
