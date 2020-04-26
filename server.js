@@ -22,7 +22,7 @@ app.get("*", (req, res) => {
 });
 
 mongoose.connect(
-	process.env.MONGODB_URI || "mongodb://localhost:27017/googlebooks",
+	process.env.MONGODB_URI || "mongodb://user:tomsucks12@ds027483.mlab.com:27483/heroku_jmd0758h",
 	{ useNewUrlParser: true }
 );
 
