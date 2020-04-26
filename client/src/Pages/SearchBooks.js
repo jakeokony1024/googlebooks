@@ -1,29 +1,40 @@
 import React, { Component } from "react";
+import Jumbotron from "../components/Jumbotron";
+import API from "../Utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import Jumbotron from "../components/Jumbotron";
+import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
-import API from "../Utils/API";
 
-class Detail extends Component {
+class Items extends Component {
 	state = {
-		item: [{}],
-		note: "",
-		author: "",
+		search: "",
+		books: [],
+		error: "",
+		message: "",
 	};
-	// When this component mounts, grab the item with the _id of this.props.match.params.id
-	// e.g. localhost:3000/books/599dcb67f0f16317844583fc
+
 	componentDidMount() {
-		API.getItem(this.props.match.params.id)
+		this.loadItems();
+	}
+
+	loadItems = () => {
+		API.getItems()
 			.then((res) =>
 				this.setState({
-					item: res.data,
-					note: res.data[0].note,
-					author: res.data[0].author,
+					items: res.data,
+					note: "",
+					author: "",
 				})
 			)
 			.catch((err) => console.log(err));
-	}
+	};
+
+	deleteItem = (id) => {
+		API.deleteItem(id)
+			.then((res) => this.loadItems())
+			.catch((err) => console.log(err));
+	};
 
 	handleInputChange(property) {
 		return (e) => {
@@ -36,44 +47,23 @@ class Detail extends Component {
 	handleFormSubmit = (event) => {
 		event.preventDefault();
 		if (this.state.note && this.state.author) {
-			API.updateItem(this.props.match.params.id, {
+			API.saveItem({
 				note: this.state.note,
 				author: this.state.author,
 			})
-				.then((res) => this.loadChanges())
+				.then((res) => this.loadItems())
 				.catch((err) => console.log(err));
 		}
-	};
-
-	loadChanges = () => {
-		API.getItem(this.props.match.params.id)
-			.then((res) => this.setState({ item: res.data }))
-			.catch((err) => console.log(err));
 	};
 
 	render() {
 		return (
 			<Container fluid>
 				<Row>
-					<Col size="md-12">
-						<Jumbotron>
-							<h1>
-								{this.state.item[0].note} by{" "}
-								{this.state.item[0].author}
-							</h1>
-						</Jumbotron>
-					</Col>
-				</Row>
-				<Row>
-					<Col size="md-2">
-						<Link to="/">← Back to To Do List</Link>
-					</Col>
-					<Col size="md-2">
-						<h2>Edit The Item</h2>
-					</Col>
-				</Row>
-				<Row>
 					<Col size="md-6">
+						<Jumbotron>
+							<h1>Add Item To List</h1>
+						</Jumbotron>
 						<form>
 							<Input
 								value={this.state.note}
@@ -92,9 +82,34 @@ class Detail extends Component {
 									!(this.state.author && this.state.note)
 								}
 								onClick={this.handleFormSubmit}>
-								Submit Changes
+								Submit To Do Item
 							</FormBtn>
 						</form>
+					</Col>
+					<Col size="md-6 sm-12">
+						<Jumbotron>
+							<h1>My To Do List</h1>
+						</Jumbotron>
+						{this.state.items.length ? (
+							<List>
+								{this.state.items.map((item) => (
+									<ListItem key={item._id}>
+										<Link to={"/items/" + item._id}>
+											<strong>
+												{item.note} by {item.author}
+											</strong>
+										</Link>
+										<DeleteBtn
+											onClick={() =>
+												this.deleteItem(item._id)
+											}
+										/>
+									</ListItem>
+								))}
+							</List>
+						) : (
+							<h3>No Results to Display</h3>
+						)}
 					</Col>
 				</Row>
 			</Container>
@@ -102,4 +117,4 @@ class Detail extends Component {
 	}
 }
 
-export default Detail;
+export default Items;
