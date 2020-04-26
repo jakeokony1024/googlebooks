@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import Jumbotron from "../components/Jumbotron";
 import API from "../Utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import SearchForm from "../components/SearchForm";
 import SearchResult from "../components/SearchResult";
 
-class Items extends Component {
+class SearchBooks extends Component {
 	state = {
 		search: "",
 		books: [],
@@ -85,4 +84,4 @@ class Items extends Component {
 	}
 }
 
-export default Items;
+export default SearchBooks;
